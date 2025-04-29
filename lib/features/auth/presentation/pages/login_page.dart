@@ -36,7 +36,8 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: AuthColors.primary,
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
-          if (state is AuthSuccess) {
+          if (state is AuthSuccess && state.isNewLogin) {
+            // Check if it's a new login
             CustomSnackBar.show(
               context: context,
               message: AuthTexts.loginSuccessMessage,

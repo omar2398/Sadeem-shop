@@ -21,6 +21,7 @@ class AuthCubit extends Cubit<AuthState> {
             accessToken: tokens['accessToken']!,
             refreshToken: tokens['refreshToken']!,
           ),
+          isNewLogin: false,
         ));
       } else {
         emit(AuthInitial());
@@ -39,6 +40,7 @@ class AuthCubit extends Cubit<AuthState> {
           accessToken: response['accessToken'],
           refreshToken: response['refreshToken'],
         ),
+        isNewLogin: true, // This is a new login
       ));
     } catch (e) {
       emit(AuthError(message: e.toString()));

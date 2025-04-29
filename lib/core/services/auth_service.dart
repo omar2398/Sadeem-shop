@@ -20,7 +20,8 @@ class AuthService {
           // Add token to request if available
           final tokens = await getStoredTokens();
           if (tokens['accessToken'] != null) {
-            options.headers['Authorization'] = 'Bearer ${tokens['accessToken']}';
+            options.headers['Authorization'] =
+                'Bearer ${tokens['accessToken']}';
           }
           return handler.next(options);
         },
@@ -31,8 +32,8 @@ class AuthService {
             if (refreshed) {
               // Retry the original request
               final tokens = await getStoredTokens();
-              error.requestOptions.headers['Authorization'] = 
-                'Bearer ${tokens['accessToken']}';
+              error.requestOptions.headers['Authorization'] =
+                  'Bearer ${tokens['accessToken']}';
               return handler.resolve(await _dio.fetch(error.requestOptions));
             }
           }
@@ -92,7 +93,7 @@ class AuthService {
   Future<Map<String, dynamic>> getCurrentUser() async {
     try {
       final response = await _dio.get('/me');
-      
+
       if (response.statusCode == 200) {
         return response.data;
       } else {

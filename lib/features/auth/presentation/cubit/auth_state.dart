@@ -14,11 +14,15 @@ class AuthLoading extends AuthState {}
 
 class AuthSuccess extends AuthState {
   final AuthTokens tokens;
+  final bool isNewLogin;
 
-  const AuthSuccess({required this.tokens});
+  const AuthSuccess({
+    required this.tokens,
+    this.isNewLogin = false,
+  });
 
   @override
-  List<Object?> get props => [tokens];
+  List<Object?> get props => [tokens, isNewLogin];
 }
 
 class AuthError extends AuthState {
