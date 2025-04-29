@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sadeem_shop/core/widgets/custom_form_field.dart';
 import 'package:sadeem_shop/features/auth/presentation/cubit/auth_state.dart';
+import '../../../../core/widgets/custom_snackbar.dart';
 import '../cubit/auth_cubit.dart';
+import '../constants/auth_constants.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -12,95 +15,169 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _rememberMe = false;
 
   @override
   void dispose() {
-    _usernameController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    //@TODO: make the ui amazing, but first we want to make the login page work
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
+      backgroundColor: AuthColors.primary,
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Login successful!')),
+            CustomSnackBar.show(
+              context: context,
+              message: AuthTexts.loginSuccessMessage,
+              isSuccess: true,
             );
-            //@TODO: Navigate to home page(after creating the homepage)
           } else if (state is AuthError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
+            CustomSnackBar.show(
+              context: context,
+              message: state.message,
+              isSuccess: false,
             );
           }
         },
         builder: (context, state) {
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextFormField(
-                    controller: _usernameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Username',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your username';
-                      }
-                      return null;
-                    },
+          return Stack(
+            children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 100),
+                child: Text(
+                  AuthTexts.loginTitle,
+                  style: TextStyle(
+                    color: AuthColors.white,
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
                   ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                      border: OutlineInputBorder(),
-                    ),
-                    obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 24),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 48,
-                    child: ElevatedButton(
-                      onPressed: state is AuthLoading
-                          ? null
-                          : () {
-                              if (_formKey.currentState?.validate() ?? false) {
-                                context.read<AuthCubit>().login(
-                                      _usernameController.text,
-                                      _passwordController.text,
-                                    );
-                              }
-                            },
-                      child: state is AuthLoading
-                          ? const CircularProgressIndicator()
-                          : const Text('Login'),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: AuthColors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            AuthTexts.welcomeBack,
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            AuthTexts.welcomeDescription,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: AuthColors.grey,
+                            ),
+                          ),
+                          const SizedBox(height: 32),
+                          CustomFormField(
+                            controller: _emailController,
+                            label: AuthTexts.usernameLabel,
+                            hintText: AuthTexts.emailHint,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return AuthTexts.emailValidationMessage;
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 24),
+                          CustomFormField(
+                            controller: _passwordController,
+                            label: AuthTexts.passwordLabel,
+                            hintText: AuthTexts.passwordHint,
+                            isPassword: true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return AuthTexts.passwordValidationMessage;
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: _rememberMe,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _rememberMe = value ?? false;
+                                  });
+                                },
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                              const Text(AuthTexts.rememberMe),
+                            ],
+                          ),
+                          const SizedBox(height: 150),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 56,
+                            child: ElevatedButton(
+                              onPressed: state is AuthLoading
+                                  ? null
+                                  : () {
+                                      if (_formKey.currentState?.validate() ??
+                                          false) {
+                                        context.read<AuthCubit>().login(
+                                              _emailController.text,
+                                              _passwordController.text,
+                                            );
+                                      }
+                                    },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AuthColors.primary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: state is AuthLoading
+                                  ? const CircularProgressIndicator(
+                                      color: AuthColors.white)
+                                  : const Text(
+                                      AuthTexts.loginButton,
+                                      style: TextStyle(
+                                        color: AuthColors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                            ),
+                          ),
+                          const SizedBox(height: 50),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           );
         },
       ),
