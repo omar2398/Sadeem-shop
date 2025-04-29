@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pretty_bloc_observer/pretty_bloc_observer.dart';
-import 'core/bloc/app_bloc_observer.dart';
+import 'package:sadeem_shop/core/services/auth_service.dart';
+import 'package:sadeem_shop/features/auth/presentation/cubit/auth_state.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
 import 'features/auth/presentation/pages/login_page.dart';
-import 'features/auth/domain/usecases/login_usecase.dart';
+import 'features/products/presentation/pages/products_page.dart';
 import 'core/di/service_locator.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized(); // Add this line
   await setupServiceLocator();
   Bloc.observer = PrettyBlocObserver();
-  runApp(const MyApp());
+  final authService = AuthService();
+  final authCubit = AuthCubit(authService: authService);
+
+  runApp(
+    BlocProvider(
+      create: (context) => authCubit..checkAuthStatus(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -25,11 +34,13 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         useMaterial3: true,
       ),
-      home: BlocProvider(
-        create: (context) => AuthCubit(
-          loginUseCase: getIt<LoginUseCase>(),
-        ),
-        child: const LoginPage(),
+      home: BlocBuilder<AuthCubit, AuthState>(
+        builder: (context, state) {
+          if (state is AuthSuccess) {
+            return const ProductsPage();
+          }
+          return const LoginPage();
+        },
       ),
     );
   }

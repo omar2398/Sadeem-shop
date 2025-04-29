@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sadeem_shop/core/di/service_locator.dart';
 import 'package:sadeem_shop/core/widgets/custom_form_field.dart';
 import 'package:sadeem_shop/features/auth/presentation/cubit/auth_state.dart';
+import 'package:sadeem_shop/features/products/domain/repositories/products_repository.dart';
+import 'package:sadeem_shop/features/products/presentation/cubit/products_cubit.dart';
+import 'package:sadeem_shop/features/products/presentation/pages/products_page.dart';
 import '../../../../core/widgets/custom_snackbar.dart';
 import '../cubit/auth_cubit.dart';
 import '../constants/auth_constants.dart';
@@ -37,6 +41,16 @@ class _LoginPageState extends State<LoginPage> {
               context: context,
               message: AuthTexts.loginSuccessMessage,
               isSuccess: true,
+            );
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (context) => ProductsCubit(
+                    repository: getIt<ProductsRepository>(),
+                  ),
+                  child: const ProductsPage(),
+                ),
+              ),
             );
           } else if (state is AuthError) {
             CustomSnackBar.show(
