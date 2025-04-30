@@ -11,7 +11,8 @@ class AuthTexts {
   static const String loginTitle = 'Login';
   static const String loginSuccessMessage = 'Login successful!';
   static const String welcomeBack = 'Welcome back! 👋';
-  static const String welcomeDescription = 'We happy to see you again. To use your account, you should log in first.';
+  static const String welcomeDescription =
+      'We happy to see you again. To use your account, you should log in first.';
   static const String usernameLabel = 'Your username';
   static const String emailHint = 'Email';
   static const String emailValidationMessage = 'Please enter your email';
