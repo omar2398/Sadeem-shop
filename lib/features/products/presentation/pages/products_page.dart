@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sadeem_shop/features/products/presentation/cubit/products_state.dart';
+import 'package:sadeem_shop/features/products/presentation/widgets/product_grid_item.dart';
+import 'package:sadeem_shop/features/products/presentation/constants/products_constants.dart';
 import '../cubit/products_cubit.dart';
-import '../widgets/product_grid_item.dart';
+import '../cubit/products_state.dart';
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({Key? key}) : super(key: key);
@@ -11,69 +12,100 @@ class ProductsPage extends StatefulWidget {
   State<ProductsPage> createState() => _ProductsPageState();
 }
 
-class _ProductsPageState extends State<ProductsPage> {
-  final ScrollController _scrollController = ScrollController();
+class _ProductsPageState extends State<ProductsPage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
     context.read<ProductsCubit>().loadProducts();
   }
 
-  void _onScroll() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      context.read<ProductsCubit>().loadMoreProducts();
+  Widget _buildBody(ProductsState state) {
+    if (state is ProductsLoading && state.products.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Products'),
-      ),
-      body: BlocBuilder<ProductsCubit, ProductsState>(
-        builder: (context, state) {
-          if (state is ProductsInitial) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state.products.isEmpty) {
-            if (state is ProductsError) {
-              return Center(child: Text(state.message));
-            }
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          return GridView.builder(
-            controller: _scrollController,
-            padding: const EdgeInsets.all(16),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.75,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
+    if (state is ProductsError && state.products.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(state.message),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => context.read<ProductsCubit>().loadProducts(),
+              child: const Text(ProductsTexts.retryButton),
             ),
-            itemCount: state.products.length + (state.isLoadingMore ? 1 : 0),
-            itemBuilder: (context, index) {
-              if (index == state.products.length) {
-                return const Center(child: CircularProgressIndicator());
-              }
+          ],
+        ),
+      );
+    }
 
-              final product = state.products[index];
-              return ProductGridItem(product: product);
-            },
-          );
-        },
+    if (state.products.isEmpty) {
+      return const Center(child: Text(ProductsTexts.noProductsFound));
+    }
+
+    return ListView.builder(
+      key: const PageStorageKey<String>('products_list'),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      itemCount: state.products.length,
+      itemBuilder: (context, index) => ProductGridItem(
+        product: state.products[index],
       ),
     );
   }
 
   @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
+  Widget build(BuildContext context) {
+    super.build(context);
+    return Scaffold(
+      backgroundColor: ProductsColors.backgroundColor,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: ProductsTexts.searchHint,
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: Container(
+                    margin: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: ProductsColors.filterButtonColor,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      Icons.filter_list,
+                      color: ProductsColors.searchBarIconColor,
+                    ),
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: ProductsColors.searchBarFillColor,
+                ),
+              ),
+            ),
+            Expanded(
+              child: BlocBuilder<ProductsCubit, ProductsState>(
+                builder: (context, state) {
+                  return RefreshIndicator(
+                    onRefresh: () =>
+                        context.read<ProductsCubit>().refreshProducts(),
+                    child: _buildBody(state),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

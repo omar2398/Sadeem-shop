@@ -13,11 +13,9 @@ class AuthService {
       validateStatus: (status) => status! < 500,
     ));
 
-    // Add interceptor for token handling
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          // Add token to request if available
           final tokens = await getStoredTokens();
           if (tokens['accessToken'] != null) {
             options.headers['Authorization'] =
@@ -27,10 +25,8 @@ class AuthService {
         },
         onError: (error, handler) async {
           if (error.response?.statusCode == 401) {
-            // Token expired, try to refresh
             final refreshed = await refreshToken();
             if (refreshed) {
-              // Retry the original request
               final tokens = await getStoredTokens();
               error.requestOptions.headers['Authorization'] =
                   'Bearer ${tokens['accessToken']}';
@@ -43,13 +39,11 @@ class AuthService {
     );
   }
 
-  // Store tokens
   Future<void> _storeTokens(String accessToken, String refreshToken) async {
     await _storage.write(key: 'access_token', value: accessToken);
     await _storage.write(key: 'refresh_token', value: refreshToken);
   }
 
-  // Get stored tokens
   Future<Map<String, String?>> getStoredTokens() async {
     final accessToken = await _storage.read(key: 'access_token');
     final refreshToken = await _storage.read(key: 'refresh_token');
@@ -59,7 +53,6 @@ class AuthService {
     };
   }
 
-  // Login
   Future<Map<String, dynamic>> login(String username, String password) async {
     try {
       final response = await _dio.post(
@@ -89,7 +82,6 @@ class AuthService {
     }
   }
 
-  // Get current user
   Future<Map<String, dynamic>> getCurrentUser() async {
     try {
       final response = await _dio.get('/me');
@@ -108,7 +100,6 @@ class AuthService {
     }
   }
 
-  // Refresh token
   Future<bool> refreshToken() async {
     final tokens = await getStoredTokens();
     if (tokens['refreshToken'] == null) {
@@ -137,12 +128,10 @@ class AuthService {
     }
   }
 
-  // Logout
   Future<void> logout() async {
     await _storage.deleteAll();
   }
 
-  // Check if user is logged in
   Future<bool> isLoggedIn() async {
     final tokens = await getStoredTokens();
     return tokens['accessToken'] != null;

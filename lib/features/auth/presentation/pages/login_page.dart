@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sadeem_shop/core/di/service_locator.dart';
 import 'package:sadeem_shop/core/widgets/custom_form_field.dart';
 import 'package:sadeem_shop/features/auth/presentation/cubit/auth_state.dart';
+import 'package:sadeem_shop/features/home/presentation/pages/home_page.dart';
 import 'package:sadeem_shop/features/products/domain/repositories/products_repository.dart';
 import 'package:sadeem_shop/features/products/presentation/cubit/products_cubit.dart';
 import 'package:sadeem_shop/features/products/presentation/pages/products_page.dart';
@@ -37,7 +38,6 @@ class _LoginPageState extends State<LoginPage> {
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthSuccess && state.isNewLogin) {
-            // Check if it's a new login
             CustomSnackBar.show(
               context: context,
               message: AuthTexts.loginSuccessMessage,
@@ -45,12 +45,7 @@ class _LoginPageState extends State<LoginPage> {
             );
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (context) => BlocProvider(
-                  create: (context) => ProductsCubit(
-                    repository: getIt<ProductsRepository>(),
-                  ),
-                  child: const ProductsPage(),
-                ),
+                builder: (context) => const HomePage(),
               ),
             );
           } else if (state is AuthError) {

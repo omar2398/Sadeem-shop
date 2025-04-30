@@ -3,21 +3,32 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pretty_bloc_observer/pretty_bloc_observer.dart';
 import 'package:sadeem_shop/core/services/auth_service.dart';
 import 'package:sadeem_shop/features/auth/presentation/cubit/auth_state.dart';
+import 'package:sadeem_shop/features/products/domain/repositories/products_repository.dart';
+import 'package:sadeem_shop/features/products/presentation/cubit/products_cubit.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
 import 'features/auth/presentation/pages/login_page.dart';
-import 'features/products/presentation/pages/products_page.dart';
+import 'features/home/presentation/pages/home_page.dart';
 import 'core/di/service_locator.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Add this line
+  WidgetsFlutterBinding.ensureInitialized();
   await setupServiceLocator();
   Bloc.observer = PrettyBlocObserver();
   final authService = AuthService();
   final authCubit = AuthCubit(authService: authService);
 
   runApp(
-    BlocProvider(
-      create: (context) => authCubit..checkAuthStatus(),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => authCubit..checkAuthStatus(),
+        ),
+        BlocProvider(
+          create: (context) => ProductsCubit(
+            repository: getIt<ProductsRepository>(),
+          ),
+        ),
+      ],
       child: const MyApp(),
     ),
   );
@@ -37,7 +48,7 @@ class MyApp extends StatelessWidget {
       home: BlocBuilder<AuthCubit, AuthState>(
         builder: (context, state) {
           if (state is AuthSuccess) {
-            return const ProductsPage();
+            return const HomePage();
           }
           return const LoginPage();
         },

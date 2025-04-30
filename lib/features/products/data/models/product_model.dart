@@ -50,37 +50,70 @@ class ProductModel extends Product {
         );
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
-    return ProductModel(
-      id: json['id'] as int,
-      title: json['title'] as String,
-      description: json['description'] as String,
-      category: json['category'] as String,
-      price: (json['price'] as num).toDouble(),
-      discountPercentage: (json['discountPercentage'] as num).toDouble(),
-      rating: (json['rating'] as num).toDouble(),
-      stock: json['stock'] as int,
-      tags: List<String>.from(json['tags'] as List),
-      brand: json['brand'] as String,
-      sku: json['sku'] as String,
-      weight: (json['weight'] as num).toDouble(),
-      dimensions: {
-        'width': (json['dimensions']['width'] as num).toDouble(),
-        'height': (json['dimensions']['height'] as num).toDouble(),
-        'depth': (json['dimensions']['depth'] as num).toDouble(),
-      },
-      warrantyInformation: json['warrantyInformation'] as String,
-      shippingInformation: json['shippingInformation'] as String,
-      availabilityStatus: json['availabilityStatus'] as String,
-      reviews: (json['reviews'] as List)
-          .map((review) =>
-              ProductReviewModel.fromJson(review as Map<String, dynamic>))
-          .toList(),
-      returnPolicy: json['returnPolicy'] as String,
-      minimumOrderQuantity: json['minimumOrderQuantity'] as int,
-      meta: ProductMetaModel.fromJson(json['meta'] as Map<String, dynamic>),
-      thumbnail: json['thumbnail'] as String,
-      images: List<String>.from(json['images'] as List),
-    );
+    try {
+      return ProductModel(
+        id: json['id'] as int,
+        title: json['title'] as String? ?? '',
+        description: json['description'] as String? ?? '',
+        category: json['category'] as String? ?? '',
+        price: (json['price'] as num?)?.toDouble() ?? 0.0,
+        discountPercentage:
+            (json['discountPercentage'] as num?)?.toDouble() ?? 0.0,
+        rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
+        stock: json['stock'] as int? ?? 0,
+        tags: (json['tags'] as List?)?.map((e) => e as String).toList() ?? [],
+        brand: json['brand'] as String? ?? '',
+        sku: json['sku'] as String? ?? '',
+        weight: (json['weight'] as num?)?.toDouble() ?? 0.0,
+        dimensions: json['dimensions'] != null
+            ? {
+                'width':
+                    (json['dimensions']['width'] as num?)?.toDouble() ?? 0.0,
+                'height':
+                    (json['dimensions']['height'] as num?)?.toDouble() ?? 0.0,
+                'depth':
+                    (json['dimensions']['depth'] as num?)?.toDouble() ?? 0.0,
+              }
+            : {'width': 0.0, 'height': 0.0, 'depth': 0.0},
+        warrantyInformation: json['warrantyInformation'] as String? ?? '',
+        shippingInformation: json['shippingInformation'] as String? ?? '',
+        availabilityStatus: json['availabilityStatus'] as String? ?? 'In Stock',
+        reviews: (json['reviews'] as List?)?.map((review) {
+              final reviewMap = review as Map<String, dynamic>;
+              return ProductReviewModel(
+                rating: (reviewMap['rating'] as num?)?.toDouble() ?? 0.0,
+                comment: reviewMap['comment'] as String? ?? '',
+                date: DateTime.tryParse(reviewMap['date'] as String? ?? '') ??
+                    DateTime.now(),
+                reviewerName: reviewMap['reviewerName'] as String? ?? '',
+                reviewerEmail: reviewMap['reviewerEmail'] as String? ?? '',
+              );
+            }).toList() ??
+            [],
+        returnPolicy: json['returnPolicy'] as String? ?? '',
+        minimumOrderQuantity: json['minimumOrderQuantity'] as int? ?? 1,
+        meta: ProductMetaModel(
+          createdAt:
+              DateTime.tryParse(json['meta']?['createdAt'] as String? ?? '') ??
+                  DateTime.now(),
+          updatedAt:
+              DateTime.tryParse(json['meta']?['updatedAt'] as String? ?? '') ??
+                  DateTime.now(),
+          barcode: json['meta']?['barcode'] as String? ?? '',
+          qrCode: json['meta']?['qrCode'] as String? ?? '',
+        ),
+        thumbnail:
+            json['thumbnail'] as String? ?? 'https://placehold.co/600x400',
+        images: (json['images'] as List?)
+                ?.map((image) =>
+                    image as String? ?? 'https://placehold.co/600x400')
+                .toList() ??
+            [],
+      );
+    } catch (e) {
+      print('Error parsing product JSON: $e');
+      rethrow;
+    }
   }
 }
 
@@ -98,16 +131,6 @@ class ProductReviewModel extends ProductReview {
           reviewerName: reviewerName,
           reviewerEmail: reviewerEmail,
         );
-
-  factory ProductReviewModel.fromJson(Map<String, dynamic> json) {
-    return ProductReviewModel(
-      rating: (json['rating'] as num).toDouble(),
-      comment: json['comment'] as String,
-      date: DateTime.parse(json['date'] as String),
-      reviewerName: json['reviewerName'] as String,
-      reviewerEmail: json['reviewerEmail'] as String,
-    );
-  }
 }
 
 class ProductMetaModel extends ProductMeta {
@@ -122,13 +145,4 @@ class ProductMetaModel extends ProductMeta {
           barcode: barcode,
           qrCode: qrCode,
         );
-
-  factory ProductMetaModel.fromJson(Map<String, dynamic> json) {
-    return ProductMetaModel(
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
-      barcode: json['barcode'] as String,
-      qrCode: json['qrCode'] as String,
-    );
-  }
 }
