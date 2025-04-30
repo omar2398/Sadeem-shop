@@ -8,6 +8,7 @@ class ProductsTexts {
   static const String priceLabel = 'Price: ';
   static const String storageLabel = 'In storage: ';
   static const String currencySymbol = '\$';
+  static const String addToCartButton = 'Add to card';
 }
 
 class ProductsColors {
@@ -21,6 +22,7 @@ class ProductsColors {
   static const Color storageColor = Color(0xFF757575);
   static const Color cardBackgroundColor = Color(0xFFF4F8FB);
   static const Color imagePlaceholderColor = Color(0xFFEEEEEE);
+  static const Color primaryButtonColor = Color(0xFF5775CD);
 }
 
 class ProductsStyles {
@@ -42,5 +44,28 @@ class ProductsStyles {
   static const TextStyle storageStyle = TextStyle(
     fontSize: 14,
     color: ProductsColors.storageColor,
+  );
+  
+  static const TextStyle detailsTitleStyle = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+  );
+
+  static const TextStyle detailsPriceStyle = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+  );
+
+  static const TextStyle detailsStorageStyle = TextStyle(
+    fontSize: 16,
+    color: ProductsColors.storageColor,
+  );
+
+  static const TextStyle detailsDescriptionStyle = TextStyle(
+    fontSize: 16,
+    color: Colors.black87,
+    height: 1.5,
   );
 }
