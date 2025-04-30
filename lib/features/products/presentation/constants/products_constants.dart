@@ -9,6 +9,12 @@ class ProductsTexts {
   static const String storageLabel = 'In storage: ';
   static const String currencySymbol = '\$';
   static const String addToCartButton = 'Add to card';
+  static const String reviewsTitle = 'Reviews';
+  static const String warrantyInformationTitle = 'Warranty Information';
+  static const String noWarrantyInformation =
+      'No warranty information available';
+  static const String returnPolicyTitle = 'Return Policy';
+  static const String noReturnPolicy = 'No return policy information available';
 }
 
 class ProductsColors {
@@ -23,6 +29,7 @@ class ProductsColors {
   static const Color cardBackgroundColor = Color(0xFFF4F8FB);
   static const Color imagePlaceholderColor = Color(0xFFEEEEEE);
   static const Color primaryButtonColor = Color(0xFF5775CD);
+  static const Color starColor = Color(0xFFFFD700);
 }
 
 class ProductsStyles {
@@ -45,15 +52,15 @@ class ProductsStyles {
     fontSize: 14,
     color: ProductsColors.storageColor,
   );
-  
+
   static const TextStyle detailsTitleStyle = TextStyle(
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: FontWeight.bold,
     color: Colors.black,
   );
 
   static const TextStyle detailsPriceStyle = TextStyle(
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: FontWeight.bold,
     color: Colors.black,
   );
@@ -65,6 +72,48 @@ class ProductsStyles {
 
   static const TextStyle detailsDescriptionStyle = TextStyle(
     fontSize: 16,
+    color: Colors.black87,
+    height: 1.5,
+  );
+
+  static const TextStyle ratingTextStyle = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+  );
+
+  static const TextStyle reviewsTitleStyle = TextStyle(
+    fontSize: 22,
+    fontWeight: FontWeight.w600,
+    color: Colors.black,
+  );
+
+  static const TextStyle reviewerNameStyle = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+    color: Colors.black,
+  );
+
+  static TextStyle reviewCommentStyle = TextStyle(
+    fontSize: 14,
+    color: Colors.black87.withOpacity(0.5),
+  );
+
+  static const TextStyle originalPriceStyle = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+    color: Colors.grey,
+    decoration: TextDecoration.lineThrough,
+  );
+
+  static const TextStyle sectionTitleStyle = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: Colors.black,
+  );
+
+  static const TextStyle sectionContentStyle = TextStyle(
+    fontSize: 14,
     color: Colors.black87,
     height: 1.5,
   );
