@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sadeem_shop/features/products/domain/entities/product.dart';
 import '../constants/products_constants.dart';
+import '../widgets/product_rating_section.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   final Product product;
@@ -115,7 +116,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 ),
               ],
             ),
-            // Remove the duplicate thumbnail image
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -126,32 +126,101 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     style: ProductsStyles.detailsTitleStyle,
                   ),
                   const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '${ProductsTexts.currencySymbol}${widget.product.price}',
-                        style: ProductsStyles.detailsPriceStyle,
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: ProductsColors.cardBackgroundColor,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '${ProductsTexts.currencySymbol}${widget.product.price}',
+                            style: ProductsStyles.detailsPriceStyle,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: ProductsColors.cardBackgroundColor),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Text(
+                                '${ProductsTexts.storageLabel}${widget.product.stock}',
+                                style: ProductsStyles.detailsStorageStyle,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        '${ProductsTexts.storageLabel}${widget.product.stock}',
-                        style: ProductsStyles.detailsStorageStyle,
-                      ),
-                    ],
+                    ),
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    widget.product.description,
-                    style: ProductsStyles.detailsDescriptionStyle,
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: ProductsColors.storageColor.withOpacity(0.05),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Text(
+                        widget.product.description,
+                        style: ProductsStyles.detailsDescriptionStyle,
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
+            const SizedBox(height: 10),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.verified_user_outlined,
+                        color: Colors.green),
+                    title: Text(
+                      ProductsTexts.warrantyInformationTitle,
+                      style: ProductsStyles.sectionTitleStyle,
+                    ),
+                    subtitle: Text(
+                      widget.product.warrantyInformation ??
+                          ProductsTexts.noWarrantyInformation,
+                      style: ProductsStyles.sectionContentStyle,
+                    ),
+                  ),
+                  ListTile(
+                    leading: const Icon(
+                      Icons.assignment_return_outlined,
+                      color: Colors.red,
+                    ),
+                    title: Text(
+                      ProductsTexts.returnPolicyTitle,
+                      style: ProductsStyles.sectionTitleStyle,
+                    ),
+                    subtitle: Text(
+                      widget.product.returnPolicy ??
+                          ProductsTexts.noReturnPolicy,
+                      style: ProductsStyles.sectionContentStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            ProductRatingSection(product: widget.product),
           ],
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(22),
         child: ElevatedButton(
           onPressed: () {
             // TODO: Implement add to cart functionality

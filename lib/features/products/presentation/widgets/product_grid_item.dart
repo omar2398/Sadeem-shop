@@ -35,7 +35,7 @@ class ProductGridItem extends StatelessWidget {
             child: Row(
               children: [
                 Container(
-                  width: 80,
+                  width: 90,
                   height: 120,
                   decoration: BoxDecoration(
                     color: ProductsColors.imagePlaceholderColor,
