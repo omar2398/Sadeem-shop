@@ -39,10 +39,7 @@ class _ProductsPageState extends State<ProductsPage>
     if (_searchQuery.isEmpty) return products;
     return products
         .where((product) =>
-            product.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-            product.description
-                .toLowerCase()
-                .contains(_searchQuery.toLowerCase()))
+            product.title.toLowerCase().contains(_searchQuery.toLowerCase()))
         .toList();
   }
 

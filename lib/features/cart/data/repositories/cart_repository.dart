@@ -14,7 +14,6 @@ class CartRepository {
       debugPrint('Fetching cart for user: $userId');
       final response = await _dio.get('/user/$userId');
       debugPrint('Cart API Response: ${response.data}');
-
       if (response.statusCode == 200) {
         final data = response.data;
         if (data['carts'] != null &&

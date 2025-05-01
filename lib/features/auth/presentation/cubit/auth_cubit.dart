@@ -24,7 +24,7 @@ class AuthCubit extends Cubit<AuthState> {
             accessToken: tokens['accessToken']!,
             refreshToken: tokens['refreshToken']!,
           ),
-          user: userData,
+          user: userData, // Add the user parameter
           isNewLogin: false,
         ));
       } else {

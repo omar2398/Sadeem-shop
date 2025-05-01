@@ -76,6 +76,8 @@ class CartCubit extends Cubit<CartState> {
         final cart = currentState.cart;
         final updatedProducts =
             cart.products.where((p) => p.id != product.id).toList();
+
+        // Create new cart with updated products
         final updatedCart = Cart(
           id: cart.id,
           products: updatedProducts,
@@ -123,6 +125,8 @@ class CartCubit extends Cubit<CartState> {
               thumbnail: product.thumbnail,
             );
           }
+
+          // Create new cart with updated products
           final updatedCart = Cart(
             id: cart.id,
             products: updatedProducts,
