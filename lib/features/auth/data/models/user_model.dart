@@ -1,7 +1,7 @@
 import '../../domain/entities/user.dart';
 
 class UserModel extends User {
-  const UserModel({
+  UserModel({
     required super.id,
     required super.username,
     required super.email,
