@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:sadeem_shop/features/products/presentation/pages/products_page.dart';
 import 'package:sadeem_shop/features/cart/presentation/pages/cart_page.dart';
 import 'package:sadeem_shop/features/favorites/presentation/pages/favorites_page.dart';
@@ -47,10 +48,11 @@ class _HomePageState extends State<HomePage> {
         ),
         child: Row(
           children: [
-            _buildNavItem(0, Icons.store, 'Products'),
-            _buildNavItem(1, Icons.shopping_cart_outlined, 'Cart'),
-            _buildNavItem(2, Icons.favorite_outline, 'Favorites'),
-            _buildNavItem(3, Icons.person_outline, 'Profile'),
+            _buildNavItem(0, HugeIcons.strokeRoundedHome12, 'Products'),
+            _buildNavItem(1, HugeIcons.strokeRoundedShoppingBasket03, 'Cart'),
+            _buildNavItem(2, HugeIcons.strokeRoundedShoppingBasketFavorite03,
+                'Favorites'),
+            _buildNavItem(3, HugeIcons.strokeRoundedProfile02, 'Profile'),
           ],
         ),
       ),

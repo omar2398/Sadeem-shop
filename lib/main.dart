@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pretty_bloc_observer/pretty_bloc_observer.dart';
+import 'package:sadeem_shop/Config/themes/theme.dart';
 import 'package:sadeem_shop/core/services/auth_service.dart';
 import 'package:sadeem_shop/features/auth/presentation/cubit/auth_state.dart';
 import 'package:sadeem_shop/features/cart/data/repositories/cart_repository.dart';
@@ -50,10 +51,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Sadeem Shop',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-      ),
+      theme: AppTheme.mainAppTheme,
       home: BlocBuilder<AuthCubit, AuthState>(
         builder: (context, state) {
           if (state is AuthSuccess) {

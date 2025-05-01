@@ -11,7 +11,6 @@ dependencies:
     sdk: flutter
   cached_network_image: ^3.3.1
   path_provider: ^2.1.2
-
   cupertino_icons: ^1.0.8
   dartz: 
   equatable: 
@@ -23,6 +22,7 @@ dependencies:
   flutter_secure_storage:
   carousel_slider: ^4.0.0
   shared_preferences:
+  hugeicons: ^0.0.10
 
 dev_dependencies:
   flutter_test:
@@ -76,3 +76,24 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+  fonts:
+    - family: Lora
+      fonts:
+        - asset: fonts/Lora/static/Lora-Regular.ttf
+        - asset: fonts/Lora/static/Lora-Medium.ttf
+          weight: 500
+        - asset: fonts/Lora/static/Lora-SemiBold.ttf
+          weight: 600
+        - asset: fonts/Lora/static/Lora-Bold.ttf
+          weight: 700
+        - asset: fonts/Lora/static/Lora-Italic.ttf
+          style: italic
+        - asset: fonts/Lora/static/Lora-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: fonts/Lora/static/Lora-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+        - asset: fonts/Lora/static/Lora-BoldItalic.ttf
+          weight: 700
+          style: italic

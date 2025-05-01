@@ -71,17 +71,25 @@ class CartCubit extends Cubit<CartState> {
 
   Future<void> removeProduct(CartItem product) async {
     try {
-      emit(CartLoading());
       final currentState = state;
       if (currentState is CartLoaded) {
         final cart = currentState.cart;
         final updatedProducts =
             cart.products.where((p) => p.id != product.id).toList();
-        final updatedCart = await _repository.updateCart(
-          cart.id,
-          updatedProducts,
-          merge: false,
+
+        // Create new cart with updated products
+        final updatedCart = Cart(
+          id: cart.id,
+          products: updatedProducts,
+          total: updatedProducts.fold(0.0, (sum, item) => sum + item.total),
+          discountedTotal: updatedProducts.fold(
+              0.0, (sum, item) => sum + item.discountedTotal),
+          userId: cart.userId,
+          totalProducts: updatedProducts.length,
+          totalQuantity:
+              updatedProducts.fold(0, (sum, item) => sum + item.quantity),
         );
+
         emit(CartLoaded(updatedCart));
       } else {
         throw Exception('No cart loaded');
@@ -93,28 +101,56 @@ class CartCubit extends Cubit<CartState> {
 
   Future<void> updateProductQuantity(CartItem product, int newQuantity) async {
     try {
-      emit(CartLoading());
       final currentState = state;
       if (currentState is CartLoaded) {
-        final updatedCart = await _repository.updateCart(
-          currentState.cart.id,
-          [
-            CartItem(
+        final cart = currentState.cart;
+        final updatedProducts = List<CartItem>.from(cart.products);
+
+        final productIndex =
+            updatedProducts.indexWhere((p) => p.id == product.id);
+        if (productIndex != -1) {
+          if (newQuantity <= 0) {
+            updatedProducts.removeAt(productIndex);
+          } else {
+            updatedProducts[productIndex] = CartItem(
               id: product.id,
               title: product.title,
               price: product.price,
               quantity: newQuantity,
-              total: product.total,
+              total: product.price * newQuantity,
               discountPercentage: product.discountPercentage,
-              discountedTotal: product.discountedTotal,
+              discountedTotal: product.price *
+                  newQuantity *
+                  (1 - product.discountPercentage / 100),
               thumbnail: product.thumbnail,
-            )
-          ],
-          merge: true,
-        );
-        emit(CartLoaded(updatedCart));
+            );
+          }
+
+          // Create new cart with updated products
+          final updatedCart = Cart(
+            id: cart.id,
+            products: updatedProducts,
+            total: updatedProducts.fold(0.0, (sum, item) => sum + item.total),
+            discountedTotal: updatedProducts.fold(
+                0.0, (sum, item) => sum + item.discountedTotal),
+            userId: cart.userId,
+            totalProducts: updatedProducts.length,
+            totalQuantity:
+                updatedProducts.fold(0, (sum, item) => sum + item.quantity),
+          );
+
+          emit(CartLoaded(updatedCart));
+        }
       } else {
-        throw Exception('No cart loaded');
+        emit(CartLoaded(Cart(
+          id: 1,
+          products: [],
+          total: 0,
+          discountedTotal: 0,
+          userId: 1,
+          totalProducts: 0,
+          totalQuantity: 0,
+        )));
       }
     } catch (e) {
       emit(CartError(e.toString()));

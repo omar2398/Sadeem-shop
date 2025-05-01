@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:sadeem_shop/core/widgets/custom_snackbar.dart';
 import 'package:sadeem_shop/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:sadeem_shop/features/auth/presentation/cubit/auth_state.dart';
@@ -11,9 +12,11 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: const Text(
-          'Settings',
+          'Profile',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -39,7 +42,7 @@ class ProfilePage extends StatelessWidget {
                     ),
                     const SizedBox(height: 32),
                     _buildSettingItem(
-                        icon: Icons.person_outline,
+                        icon: HugeIcons.strokeRoundedMan,
                         iconColor: Colors.blue,
                         title: 'Name',
                         value: '${user.firstName} ${user.lastName}',
@@ -47,7 +50,7 @@ class ProfilePage extends StatelessWidget {
                         showArrow: false),
                     const SizedBox(height: 16),
                     _buildSettingItem(
-                      icon: Icons.email,
+                      icon: HugeIcons.strokeRoundedMail01,
                       iconColor: Colors.blue,
                       title: 'Email',
                       value: user.email,
@@ -56,7 +59,7 @@ class ProfilePage extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     _buildSettingItem(
-                      icon: Icons.family_restroom,
+                      icon: HugeIcons.strokeRoundedManWoman,
                       iconColor: Colors.blue,
                       title: 'Gender',
                       value: user.gender,
@@ -64,20 +67,20 @@ class ProfilePage extends StatelessWidget {
                       onTap: () {
                         CustomSnackBar.show(
                             context: context,
-                            message: "This feature isn't available now!!",
+                            message: "This feature isn't available now!",
                             isSuccess: false);
                       },
                     ),
                     const SizedBox(height: 16),
                     _buildSettingItem(
-                      icon: Icons.language_outlined,
+                      icon: HugeIcons.strokeRoundedLanguageCircle,
                       iconColor: Colors.blue,
                       title: 'Language',
                       value: 'English',
                       onTap: () {
                         CustomSnackBar.show(
                             context: context,
-                            message: "This feature isn't available now!!",
+                            message: "This feature isn't available now!",
                             isSuccess: false);
                       },
                     ),
@@ -96,7 +99,7 @@ class ProfilePage extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     _buildSettingItem(
-                      icon: Icons.logout,
+                      icon: HugeIcons.strokeRoundedLogout01,
                       iconColor: Colors.red,
                       title: 'Logout',
                       showArrow: false,

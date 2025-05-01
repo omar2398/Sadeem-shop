@@ -36,7 +36,7 @@ class ProductRatingSection extends StatelessWidget {
                         ? Icons.star
                         : Icons.star_border,
                     color: ProductsColors.starColor,
-                    size: 30,
+                    size: 20,
                   );
                 }),
               ),
@@ -68,7 +68,7 @@ class ProductRatingSection extends StatelessWidget {
                                   ? Icons.star
                                   : Icons.star_border,
                               color: ProductsColors.starColor,
-                              size: 18,
+                              size: 16,
                             );
                           }),
                         ),
@@ -79,11 +79,6 @@ class ProductRatingSection extends StatelessWidget {
                       review.comment,
                       style: ProductsStyles.reviewCommentStyle,
                     ),
-                    const SizedBox(height: 5),
-                    if (index != product.reviews.length - 1)
-                      const Divider(
-                        height: 1,
-                      )
                   ],
                 ),
               );
