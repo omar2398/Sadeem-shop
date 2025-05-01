@@ -108,10 +108,8 @@ class CartCubit extends Cubit<CartState> {
             updatedProducts.indexWhere((p) => p.id == product.id);
         if (productIndex != -1) {
           if (newQuantity <= 0) {
-            // If quantity is 0 or less, remove the product
             updatedProducts.removeAt(productIndex);
           } else {
-            // Update the product with new quantity
             updatedProducts[productIndex] = CartItem(
               id: product.id,
               title: product.title,
@@ -125,8 +123,6 @@ class CartCubit extends Cubit<CartState> {
               thumbnail: product.thumbnail,
             );
           }
-
-          // Create new cart with updated products
           final updatedCart = Cart(
             id: cart.id,
             products: updatedProducts,
