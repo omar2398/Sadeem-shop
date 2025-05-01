@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static ThemeData mainAppTheme = ThemeData(
+  static ThemeData lightTheme = ThemeData(
     primarySwatch: Colors.blue,
     useMaterial3: true,
     fontFamily: 'Lora',
+    brightness: Brightness.light,
+    scaffoldBackgroundColor: Colors.white,
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.white,
+      elevation: 0,
+    ),
     textTheme: const TextTheme(
       displayLarge: TextStyle(fontFamily: 'Lora'),
       displayMedium: TextStyle(fontFamily: 'Lora'),
@@ -23,4 +29,8 @@ class AppTheme {
       labelSmall: TextStyle(fontFamily: 'Lora'),
     ),
   );
+
+  static ThemeData darkTheme = ThemeData(
+      //@Todo: Add dark theme
+      );
 }
