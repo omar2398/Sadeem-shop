@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sadeem_shop/core/widgets/custom_snackbar.dart';
+import 'package:sadeem_shop/features/cart/domain/entities/cart_item.dart';
+import 'package:sadeem_shop/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:sadeem_shop/features/products/domain/entities/product.dart';
 import '../constants/products_constants.dart';
 import '../widgets/product_rating_section.dart';
@@ -222,8 +226,24 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(22),
         child: ElevatedButton(
-          onPressed: () {
-            // TODO: Implement add to cart functionality
+          onPressed: () async {
+            final cartItem = CartItem(
+              id: widget.product.id,
+              title: widget.product.title,
+              price: widget.product.price,
+              quantity: 1,
+              total: widget.product.price,
+              discountPercentage: widget.product.discountPercentage ?? 0,
+              discountedTotal: widget.product.price *
+                  (1 - (widget.product.discountPercentage ?? 0) / 100),
+              thumbnail: widget.product.thumbnail,
+            );
+            await context.read<CartCubit>().addProduct(1, cartItem);
+            CustomSnackBar.show(
+              message: 'Added to cart successfully',
+              isSuccess: true,
+              context: context,
+            );
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: ProductsColors.primaryButtonColor,
@@ -235,10 +255,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           child: const Text(
             ProductsTexts.addToCartButton,
             style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: ProductsColors.backgroundColor),
           ),
         ),
       ),

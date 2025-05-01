@@ -70,7 +70,7 @@ class ProductGridItem extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '${ProductsTexts.priceLabel}${product.price.toInt()}${ProductsTexts.currencySymbol}',
+                            '${ProductsTexts.priceLabel}${product.price}${ProductsTexts.currencySymbol}',
                             style: ProductsStyles.priceStyle,
                           ),
                           Text(

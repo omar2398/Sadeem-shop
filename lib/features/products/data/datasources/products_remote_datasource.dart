@@ -26,7 +26,6 @@ class ProductsRemoteDataSourceImpl implements ProductsRemoteDataSource {
           'skip': skip,
         },
       );
-      print('API Response: ${response.data}');
 
       final data = response.data;
       final productsJson = data['products'] as List;

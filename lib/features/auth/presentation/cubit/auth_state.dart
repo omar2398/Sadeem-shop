@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:sadeem_shop/features/auth/domain/entities/user.dart';
 import '../../domain/entities/auth_tokens.dart';
 
 abstract class AuthState extends Equatable {
@@ -14,15 +15,14 @@ class AuthLoading extends AuthState {}
 
 class AuthSuccess extends AuthState {
   final AuthTokens tokens;
+  final User user;
   final bool isNewLogin;
 
   const AuthSuccess({
     required this.tokens,
-    this.isNewLogin = false,
+    required this.user,
+    required this.isNewLogin,
   });
-
-  @override
-  List<Object?> get props => [tokens, isNewLogin];
 }
 
 class AuthError extends AuthState {

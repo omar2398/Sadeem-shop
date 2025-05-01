@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 import 'package:sadeem_shop/core/services/auth_service.dart';
+import 'package:sadeem_shop/features/cart/data/repositories/cart_repository.dart';
 import '../../features/auth/data/datasources/auth_remote_datasource.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
@@ -32,7 +33,9 @@ Future<void> setupServiceLocator() async {
     () => ProductsRepositoryImpl(
         remoteDataSource: getIt<ProductsRemoteDataSource>()),
   );
-
+  getIt.registerLazySingleton<CartRepository>(
+    () => CartRepository(dio: getIt<Dio>()),
+  );
   // Use cases
   getIt.registerLazySingleton(
       () => LoginUseCase(repository: getIt<AuthRepository>()));
@@ -41,4 +44,6 @@ Future<void> setupServiceLocator() async {
   getIt.registerFactory(() => AuthCubit(
         authService: getIt<AuthService>(),
       ));
+  // Services
+  getIt.registerLazySingleton(() => AuthService());
 }

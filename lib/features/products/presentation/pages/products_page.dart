@@ -75,7 +75,7 @@ class _ProductsPageState extends State<ProductsPage>
                   suffixIcon: Container(
                     margin: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: ProductsColors.filterButtonColor,
+                      color: ProductsColors.primaryButtonColor,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
@@ -96,6 +96,9 @@ class _ProductsPageState extends State<ProductsPage>
               child: BlocBuilder<ProductsCubit, ProductsState>(
                 builder: (context, state) {
                   return RefreshIndicator(
+                    color: ProductsColors.backgroundColor,
+                    backgroundColor: ProductsColors.primaryButtonColor,
+                    elevation: 0,
                     onRefresh: () =>
                         context.read<ProductsCubit>().refreshProducts(),
                     child: _buildBody(state),

@@ -8,6 +8,7 @@ class CustomSnackBar {
   }) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
+        duration: const Duration(seconds: 1),
         content: Center(
           child: Text(
             message,
