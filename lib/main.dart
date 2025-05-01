@@ -12,13 +12,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/home/presentation/pages/home_page.dart';
+import 'features/onboarding/presentation/pages/onboarding_page.dart';
 import 'core/di/service_locator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SharedPreferences.getInstance();
   await setupServiceLocator();
-
   final authService = AuthService();
   final authCubit = AuthCubit(authService: authService);
 
@@ -52,12 +51,27 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Sadeem Shop',
       theme: AppTheme.lightTheme,
-      home: BlocBuilder<AuthCubit, AuthState>(
-        builder: (context, state) {
-          if (state is AuthSuccess) {
-            return const HomePage();
+      home: FutureBuilder<bool>(
+        future: SharedPreferences.getInstance().then(
+          (prefs) => !(prefs.getBool('onboarding_completed') ?? false),
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
           }
-          return const LoginPage();
+          final showOnboarding = snapshot.data ?? true;
+
+          if (showOnboarding) {
+            return const OnboardingPage();
+          }
+          return BlocBuilder<AuthCubit, AuthState>(
+            builder: (context, state) {
+              if (state is AuthSuccess) {
+                return const HomePage();
+              }
+              return const LoginPage();
+            },
+          );
         },
       ),
     );

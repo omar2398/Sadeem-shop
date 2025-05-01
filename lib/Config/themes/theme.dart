@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static ThemeData lightTheme = ThemeData(
-    primarySwatch: Colors.blue,
+    primaryColor: Color(0xFF5775CD),
     useMaterial3: true,
     fontFamily: 'Lora',
     brightness: Brightness.light,

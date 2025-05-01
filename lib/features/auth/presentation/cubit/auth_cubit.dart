@@ -17,14 +17,13 @@ class AuthCubit extends Cubit<AuthState> {
       final isLoggedIn = await _authService.isLoggedIn();
       if (isLoggedIn) {
         final tokens = await _authService.getStoredTokens();
-        final userData =
-            await _authService.getStoredUser(); // Get stored user data
+        final userData = await _authService.getStoredUser();
         emit(AuthSuccess(
           tokens: AuthTokens(
             accessToken: tokens['accessToken']!,
             refreshToken: tokens['refreshToken']!,
           ),
-          user: userData, // Add the user parameter
+          user: userData,
           isNewLogin: false,
         ));
       } else {

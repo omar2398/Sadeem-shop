@@ -36,6 +36,9 @@ flutter:
   assets:
       - assets/images/Shopping App Vector.png
       - assets/images/logo.png
+      - assets/images/Onboarding1.png
+      - assets/images/onboarding2.png
+      - assets/images/onboarding3.png
   fonts:
     - family: Lora
       fonts:
