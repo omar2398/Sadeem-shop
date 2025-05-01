@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sadeem_shop/core/widgets/custom_snackbar.dart';
 import 'package:sadeem_shop/features/cart/domain/entities/cart_item.dart';
 import 'package:sadeem_shop/features/cart/presentation/cubit/cart_cubit.dart';
+import 'package:sadeem_shop/features/cart/presentation/cubit/cart_state.dart';
 import 'package:sadeem_shop/features/products/domain/entities/product.dart';
 import '../constants/products_constants.dart';
 import '../widgets/product_rating_section.dart';
@@ -225,40 +226,68 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(22),
-        child: ElevatedButton(
-          onPressed: () async {
-            final cartItem = CartItem(
-              id: widget.product.id,
-              title: widget.product.title,
-              price: widget.product.price,
-              quantity: 1,
-              total: widget.product.price,
-              discountPercentage: widget.product.discountPercentage ?? 0,
-              discountedTotal: widget.product.price *
-                  (1 - (widget.product.discountPercentage ?? 0) / 100),
-              thumbnail: widget.product.thumbnail,
-            );
-            await context.read<CartCubit>().addProduct(1, cartItem);
-            CustomSnackBar.show(
-              message: 'Added to cart successfully',
-              isSuccess: true,
-              context: context,
+        child: BlocBuilder<CartCubit, CartState>(
+          builder: (context, state) {
+            return ElevatedButton(
+              onPressed: state is CartLoading
+                  ? null
+                  : () async {
+                      final cartItem = CartItem(
+                        id: widget.product.id,
+                        title: widget.product.title,
+                        price: widget.product.price,
+                        quantity: 1,
+                        total: widget.product.price,
+                        discountPercentage:
+                            widget.product.discountPercentage ?? 0,
+                        discountedTotal: widget.product.price *
+                            (1 -
+                                (widget.product.discountPercentage ?? 0) / 100),
+                        thumbnail: widget.product.thumbnail,
+                      );
+                      await context.read<CartCubit>().addProduct(1, cartItem);
+                      final currentState = context.read<CartCubit>().state;
+                      if (currentState is CartLoaded) {
+                        CustomSnackBar.show(
+                          message: 'Added to cart successfully',
+                          isSuccess: true,
+                          context: context,
+                        );
+                      }
+                      if (currentState is CartError) {
+                        CustomSnackBar.show(
+                          message: 'Error in adding your product',
+                          isSuccess: false,
+                          context: context,
+                        );
+                      }
+                    },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: ProductsColors.primaryButtonColor,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: state is CartLoading
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        color: ProductsColors.backgroundColor,
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : const Text(
+                      ProductsTexts.addToCartButton,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: ProductsColors.backgroundColor,
+                      ),
+                    ),
             );
           },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: ProductsColors.primaryButtonColor,
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-          child: const Text(
-            ProductsTexts.addToCartButton,
-            style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: ProductsColors.backgroundColor),
-          ),
         ),
       ),
     );
