@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:sadeem_shop/core/widgets/custom_snackbar.dart';
 import 'package:sadeem_shop/features/cart/domain/entities/cart_item.dart';
 import 'package:sadeem_shop/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:sadeem_shop/features/cart/presentation/cubit/cart_state.dart';
 import 'package:sadeem_shop/features/products/domain/entities/product.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/products_constants.dart';
 import '../widgets/product_rating_section.dart';
 
@@ -23,6 +25,37 @@ class ProductDetailsPage extends StatefulWidget {
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   final PageController _pageController = PageController();
   int _currentImageIndex = 0;
+  bool isLiked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfLiked();
+  }
+
+  Future<void> _checkIfLiked() async {
+    final prefs = await SharedPreferences.getInstance();
+    final likedProducts = prefs.getStringList('liked_products') ?? [];
+    setState(() {
+      isLiked = likedProducts.contains(widget.product.id.toString());
+    });
+  }
+
+  Future<void> _toggleLike() async {
+    final prefs = await SharedPreferences.getInstance();
+    final likedProducts = prefs.getStringList('liked_products') ?? [];
+
+    setState(() {
+      isLiked = !isLiked;
+      if (isLiked) {
+        likedProducts.add(widget.product.id.toString());
+      } else {
+        likedProducts.remove(widget.product.id.toString());
+      }
+    });
+
+    await prefs.setStringList('liked_products', likedProducts);
+  }
 
   @override
   void dispose() {
@@ -45,6 +78,16 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              isLiked ? Icons.favorite : HugeIcons.strokeRoundedFavourite,
+              color: isLiked ? Colors.red : Colors.grey,
+              size: 35,
+            ),
+            onPressed: _toggleLike,
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(

@@ -58,16 +58,39 @@ class _LoginPageState extends State<LoginPage> {
         },
         builder: (context, state) {
           return Stack(
+            alignment: Alignment.topCenter,
             children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 100),
-                child: Text(
-                  AuthTexts.loginTitle,
-                  style: TextStyle(
-                    color: AuthColors.white,
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                  ),
+              Padding(
+                padding: const EdgeInsets.only(top: 50),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Stack(
+                      children: [
+                        Center(
+                          child: Image.asset(
+                            'assets/images/Shopping App Vector.png',
+                            width: 300,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(25),
+                          child: Center(
+                            child: Text(
+                              AuthTexts.loginTitle,
+                              style: TextStyle(
+                                color: AuthColors.white,
+                                fontSize: 60,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
               Align(
