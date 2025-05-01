@@ -35,6 +35,7 @@ class _CartPageState extends State<CartPage> {
             CartTexts.emptyCartTitle,
             style: TextStyle(fontSize: 18, color: Colors.grey),
           ),
+          /*
           SizedBox(height: 16),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -55,6 +56,7 @@ class _CartPageState extends State<CartPage> {
               style: TextStyle(color: Colors.white, fontSize: 18),
             ),
           )
+          */
         ],
       ),
     );
@@ -81,92 +83,95 @@ class _CartPageState extends State<CartPage> {
           }
         },
         builder: (context, state) {
+          Cart? cart;
+          if (state is CartLoaded) {
+            cart = state.cart;
+          }
           if (state is CartLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (state is CartLoaded && state.cart.products.isEmpty) {
+          if (cart == null) {
             return _buildEmptyCart();
           }
 
-          if (state is CartLoaded) {
-            return Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: state.cart.products.length,
-                    itemBuilder: (context, index) => CartItemWidget(
-                      item: state.cart.products[index],
-                      cart: state.cart,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Total',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          Text(
-                            '\$${state.cart.total.toStringAsFixed(2)}',
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF5775CD),
-                            ),
-                          ),
-                        ],
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          CustomSnackBar.show(
-                              context: context,
-                              message: 'Checkout not implemented yet',
-                              isSuccess: false);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF5775CD),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 32,
-                            vertical: 16,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: const Text(
-                          'Checkout',
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            );
+          if (cart.products.isEmpty) {
+            return _buildEmptyCart();
           }
-
-          return _buildEmptyCart();
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: cart.products.length,
+                  itemBuilder: (context, index) => CartItemWidget(
+                    item: cart!.products[index],
+                    cart: cart!,
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Total',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        Text(
+                          '\$${cart.total.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF5775CD),
+                          ),
+                        ),
+                      ],
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        CustomSnackBar.show(
+                            context: context,
+                            message: 'Checkout not implemented yet',
+                            isSuccess: false);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF5775CD),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 32,
+                          vertical: 16,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: const Text(
+                        'Checkout',
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
         },
       ),
     );

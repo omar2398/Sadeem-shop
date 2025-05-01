@@ -37,7 +37,7 @@ class CartStyles {
 }
 
 class CartTexts {
-  static const String appBarTitle = 'Shopping Cart';
+  static const String appBarTitle = 'Your Cart';
   static const String emptyCartTitle = 'Your cart is empty';
   static const String retryButtonText = 'Retry';
   static const String checkoutButtonText = 'Checkout';
