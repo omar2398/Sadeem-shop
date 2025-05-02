@@ -2,7 +2,7 @@
 
 An e-commerce mobile application built with Flutter, developed as part of **Phase 2 tasks** of the **Sadeem Tech** in our internship program.
 
-📄 **[Project Overview](https://drive.google.com/file/d/1g_WX4suP4ZxxrxmahoJSv78DpnGDCdCL/view?usp=sharing)**
+📄 **[Project Overview(Recorded Video)](https://drive.google.com/file/d/1g_WX4suP4ZxxrxmahoJSv78DpnGDCdCL/view?usp=sharing)**
 
 ## Features
 
